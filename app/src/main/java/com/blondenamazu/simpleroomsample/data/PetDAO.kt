@@ -14,6 +14,10 @@ interface PetDAO {
     @Query(value = "SELECT * FROM Owner")
     fun getOneToOneOwnerAndDog(): List<OneToOneOwnerAndDog>
 
+    @Transaction
+    @Query(value = "SELECT * FROM Owner")
+    fun getOneToManyOwnerAndDogs(): List<OneToManyOwnerAndDogs>
+
     @Insert
     fun insertDog(dog: Dog)
 

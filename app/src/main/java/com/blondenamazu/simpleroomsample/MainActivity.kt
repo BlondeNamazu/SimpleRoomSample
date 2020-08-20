@@ -85,6 +85,13 @@ class MainActivity : AppCompatActivity() {
                 .map { "${it.owner.name} has ${it.dog.name}" }
             updateList()
         }
+        show_one_to_many.setOnClickListener {
+            listItems = database
+                .petDao()
+                .getOneToManyOwnerAndDogs()
+                .map { "${it.owner.name} has ${it.dogs.map { dog -> dog.name }}" }
+            updateList()
+        }
         delete_all_button.setOnClickListener {
             database
                 .petDao()
@@ -95,7 +102,8 @@ class MainActivity : AppCompatActivity() {
             updateList()
         }
     }
-    private fun updateList(){
+
+    private fun updateList() {
         show_result.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_list_item_1,
