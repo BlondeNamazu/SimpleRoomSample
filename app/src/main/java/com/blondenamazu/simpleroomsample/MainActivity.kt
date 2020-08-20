@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var database: AppDatabase
-    var listItems: List<String> = listOf("po", "yo")
+    var listItems: List<String> = listOf()
     lateinit var adapter: ArrayAdapter<String>
     var latestOwnerId: Long = 0
     var latestDogId: Long = 0
@@ -22,12 +22,7 @@ class MainActivity : AppCompatActivity() {
             .databaseBuilder(this, AppDatabase::class.java, "petDB")
             .allowMainThreadQueries()
             .build()
-        adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            listItems
-        )
-        show_result.adapter = adapter
+        updateList()
         latestOwnerId = database
             .petDao()
             .getAllOwners()
@@ -40,11 +35,12 @@ class MainActivity : AppCompatActivity() {
             .max() ?: 0
         insert_owner_button.setOnClickListener {
             val name = edit_owner_name.text.toString()
+            edit_owner_name.text.clear()
             val newOwner = Owner(
                 ownerId = latestOwnerId,
                 name = name
             )
-            println("attempt to insert id: ${latestOwnerId}, name: ${name}")
+            //println("attempt to insert id: ${latestOwnerId}, name: ${name}")
             latestOwnerId += 1
             database
                 .petDao()
@@ -52,13 +48,15 @@ class MainActivity : AppCompatActivity() {
         }
         insert_dog_button.setOnClickListener {
             val ownerId = edit_dogOwner_id.text.toString().toLong()
+            edit_dogOwner_id.text.clear()
             val name = edit_dog_name.text.toString()
+            edit_dog_name.text.clear()
             val newDog = Dog(
                 dogId = latestDogId,
                 dogOwnerId = ownerId,
                 name = name
             )
-            println("attempt to insert id: ${latestDogId}, name: ${name}")
+            //println("attempt to insert id: ${latestDogId}, name: ${name}")
             latestDogId += 1
             database
                 .petDao()
@@ -68,26 +66,34 @@ class MainActivity : AppCompatActivity() {
             listItems = database
                 .petDao()
                 .getAllDogs()
-                .map { dog -> "Owner id: ${dog.dogOwnerId} name: ${dog.name}" }
-            listItems.forEach { println(it) }
-            show_result.adapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                listItems
-            )
+                .map { dog -> "id: ${dog.dogId} Owner id: ${dog.dogOwnerId} name: ${dog.name}" }
+            //listItems.forEach { println(it) }
+            updateList()
         }
         show_owner_button.setOnClickListener {
             listItems = database
                 .petDao()
                 .getAllOwners()
                 .map { owner -> "id: ${owner.ownerId} name: ${owner.name}" }
-            listItems.forEach { println(it) }
-            show_result.adapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                listItems
-            )
+            //listItems.forEach { println(it) }
+            updateList()
         }
+        delete_all_button.setOnClickListener {
+            database
+                .petDao()
+                .deleteAllData()
+            listItems = emptyList()
+            latestDogId = 0
+            latestOwnerId = 0
+            updateList()
+        }
+    }
+    private fun updateList(){
+        show_result.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            listItems
+        )
     }
 }
 

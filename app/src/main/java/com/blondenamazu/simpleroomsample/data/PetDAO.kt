@@ -1,9 +1,6 @@
 package com.blondenamazu.simpleroomsample.data
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 
 @Dao
 interface PetDAO {
@@ -22,4 +19,16 @@ interface PetDAO {
 
     @Insert
     fun insertOwner(owner: Owner)
+
+    @Transaction
+    fun deleteAllData() {
+        deleteAllDogs()
+        deleteAllOwners()
+    }
+
+    @Query(value = "DELETE FROM Dog")
+    fun deleteAllDogs()
+
+    @Query(value = "DELETE FROM Owner")
+    fun deleteAllOwners()
 }

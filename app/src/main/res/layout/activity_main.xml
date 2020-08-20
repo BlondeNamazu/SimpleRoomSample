@@ -124,6 +124,17 @@
         android:textAllCaps="false"
         android:text="Show dogs"
         app:layout_constraintLeft_toRightOf="@id/show_owner_button"
+        app:layout_constraintRight_toLeftOf="@id/delete_all_button"
+        app:layout_constraintTop_toBottomOf="@id/insert_dog_button" />
+
+    <Button
+        android:id="@+id/delete_all_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textAllCaps="false"
+        android:text="Delete Data"
+        app:layout_constraintLeft_toRightOf="@id/show_dog_button"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/insert_dog_button" />
 
