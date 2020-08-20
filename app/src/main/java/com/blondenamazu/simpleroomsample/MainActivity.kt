@@ -78,6 +78,13 @@ class MainActivity : AppCompatActivity() {
             //listItems.forEach { println(it) }
             updateList()
         }
+        show_one_to_one.setOnClickListener {
+            listItems = database
+                .petDao()
+                .getOneToOneOwnerAndDog()
+                .map { "${it.owner.name} has ${it.dog.name}" }
+            updateList()
+        }
         delete_all_button.setOnClickListener {
             database
                 .petDao()
